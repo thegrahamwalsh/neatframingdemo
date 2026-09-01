@@ -1,9 +1,12 @@
+Here is the updated, complete **`index.html`** file. This version eliminates the 404 error by retrieving active camera settings directly from the endpoint object (using cache or fetching `/endpoints/{deviceId}`), while keeping `PATCH` updates directed to `/settings`.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neat Pulse - Default Framing Mode Controller</title>
+  <title>Neat Pulse - Default Framing Controller</title>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -69,7 +72,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label for="baseUrl">Base API / Worker URL</label>
-            <input type="url" id="baseUrl" placeholder="[https://neat-pulse-proxy.your-subdomain.workers.dev](https://neat-pulse-proxy.your-subdomain.workers.dev)" required>
+            <input type="url" id="baseUrl" placeholder="https://neat-pulse-proxy.your-subdomain.workers.dev" required>
           </div>
           <div class="form-group">
             <label for="orgId">Organization ID</label>
@@ -83,7 +86,7 @@
 
         <div class="form-group">
           <label for="proxyUrl">CORS Proxy Prefix (Only if NOT using Cloudflare Worker)</label>
-          <input type="text" id="proxyUrl" value="[https://corsproxy.io/](https://corsproxy.io/)?">
+          <input type="text" id="proxyUrl" value="https://corsproxy.io/?">
           <div class="checkbox-group">
             <input type="checkbox" id="useProxy">
             <label for="useProxy">Prepend CORS Proxy Prefix (Leave UNCHECKED if using Cloudflare Worker)</label>
@@ -316,72 +319,79 @@
     }
 
     async function fetchCurrentDeviceSettings(deviceId) {
-      const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
-      const orgId = localStorage.getItem('neat_orgId');
-      const apiKey = localStorage.getItem('neat_apiKey');
+      log(`Reading current settings for endpoint: ${deviceId}...`);
 
-      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
-      const finalUrl = buildUrl(targetEndpoint);
+      let dev = cachedDevices.find(d => (d.id || d.endpoint_id || d.serial_number) === deviceId);
 
-      log(`Querying current settings for endpoint ${deviceId}...`);
-
-      try {
-        const response = await fetch(finalUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
-
-        const data = await response.json();
-        log(`Settings retrieved for endpoint ${deviceId}:`, data);
-
-        const cameraObj = data.settings?.camera || data.camera || data;
-        const currentMode = (
-          cameraObj.defaultFramingMode || 
-          cameraObj.default_framing_mode || 
-          cameraObj.framing_mode || 
-          cameraObj.framingMode
-        )?.toLowerCase();
-
-        highlightCurrentSetting(currentMode);
-      } catch (err) {
-        log(`Could not fetch settings: ${err.message}`);
-        
-        const dev = cachedDevices.find(d => (d.id || d.endpoint_id) === deviceId);
-        if (dev && dev.settings?.camera) {
-          const currentMode = (
-            dev.settings.camera.defaultFramingMode || 
-            dev.settings.camera.default_framing_mode || 
-            dev.settings.camera.framing_mode
-          )?.toLowerCase();
-          highlightCurrentSetting(currentMode);
-        } else {
-          highlightCurrentSetting(null);
+      // Fetch single endpoint payload directly if absent from cache
+      if (!dev) {
+        try {
+          const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
+          const orgId = localStorage.getItem('neat_orgId');
+          const apiKey = localStorage.getItem('neat_apiKey');
+          const endpointUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}`);
+          
+          const res = await fetch(endpointUrl, {
+            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
+          });
+          if (res.ok) dev = await res.json();
+        } catch (err) {
+          log(`Could not query endpoint object: ${err.message}`);
         }
+      }
+
+      if (dev) {
+        log('Target Endpoint Payload:', dev);
+        const detectedMode = extractFramingMode(dev);
+        log(`Detected Framing Setting: ${detectedMode ? detectedMode.toUpperCase() : 'NOT SPECIFIED'}`);
+        highlightCurrentSetting(detectedMode);
+      } else {
+        log('Device details unavailable.');
+        highlightCurrentSetting(null);
       }
     }
 
-    function highlightCurrentSetting(mode) {
+    function extractFramingMode(obj) {
+      if (!obj || typeof obj !== 'object') return null;
+
+      const targetKeys = ['defaultframingmode', 'default_framing_mode', 'framingmode', 'framing_mode', 'framing'];
+
+      for (const [key, val] of Object.entries(obj)) {
+        const lowerKey = key.toLowerCase();
+        
+        if (targetKeys.includes(lowerKey) && typeof val === 'string') {
+          return val;
+        }
+
+        if (typeof val === 'object' && val !== null && key !== 'room' && key !== 'endpoints') {
+          const found = extractFramingMode(val);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+
+    function highlightCurrentSetting(rawMode) {
       document.querySelectorAll('.framing-card').forEach(card => {
         card.classList.remove('current-setting');
       });
 
-      if (!mode) return;
+      if (!rawMode) return;
 
-      let targetMode = mode;
+      const mode = rawMode.toLowerCase();
+      let targetMode = null;
+
       if (mode.includes('group')) targetMode = 'group';
-      else if (mode.includes('indiv') || mode.includes('equal') || mode.includes('symmetry')) targetMode = 'individual';
-      else if (mode.includes('speak') || mode.includes('highl')) targetMode = 'speaker';
-      else if (mode.includes('off') || mode.includes('disable')) targetMode = 'off';
+      else if (mode.includes('indiv') || mode.includes('equal') || mode.includes('symmetry') || mode.includes('grid')) targetMode = 'individual';
+      else if (mode.includes('speak') || mode.includes('highl') || mode.includes('focus')) targetMode = 'speaker';
+      else if (mode.includes('off') || mode.includes('disable') || mode.includes('fixed')) targetMode = 'off';
 
-      const currentCard = document.querySelector(`.framing-card[data-mode="${targetMode}"]`);
-      if (currentCard) {
-        currentCard.classList.add('current-setting');
-        log(`Current framing mode active on device: ${targetMode.toUpperCase()}`);
+      if (targetMode) {
+        const currentCard = document.querySelector(`.framing-card[data-mode="${targetMode}"]`);
+        if (currentCard) {
+          currentCard.classList.add('current-setting');
+          log(`Highlighted active mode on device: ${targetMode.toUpperCase()}`);
+        }
       }
     }
 
@@ -437,3 +447,5 @@
   </script>
 </body>
 </html>
+
+```

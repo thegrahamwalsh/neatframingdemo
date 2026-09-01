@@ -83,7 +83,7 @@
 
         <div class="form-group">
           <label for="proxyUrl">CORS Proxy Prefix (Only if NOT using Cloudflare Worker)</label>
-          <input type="text" id="proxyUrl" value="https://neat-pulse-proxy.graham-walsh.workers.dev">
+          <input type="text" id="proxyUrl" value="https://corsproxy.io/?">
           <div class="checkbox-group">
             <input type="checkbox" id="useProxy">
             <label for="useProxy">Prepend CORS Proxy Prefix (Leave UNCHECKED if using Cloudflare Worker)</label>
@@ -316,34 +316,31 @@
     }
 
     async function fetchCurrentDeviceSettings(deviceId) {
-      log(`Reading current settings for endpoint: ${deviceId}...`);
+      log(`Fetching detailed settings object for endpoint: ${deviceId}...`);
 
-      let dev = cachedDevices.find(d => (d.id || d.endpoint_id || d.serial_number) === deviceId);
+      const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
+      const orgId = localStorage.getItem('neat_orgId');
+      const apiKey = localStorage.getItem('neat_apiKey');
+      const endpointUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}`);
+      
+      try {
+        const res = await fetch(endpointUrl, {
+          headers: { 
+            'Authorization': `Bearer ${apiKey}`, 
+            'Content-Type': 'application/json' 
+          }
+        });
 
-      // Fetch single endpoint payload directly if absent from cache
-      if (!dev) {
-        try {
-          const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
-          const orgId = localStorage.getItem('neat_orgId');
-          const apiKey = localStorage.getItem('neat_apiKey');
-          const endpointUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}`);
-          
-          const res = await fetch(endpointUrl, {
-            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
-          });
-          if (res.ok) dev = await res.json();
-        } catch (err) {
-          log(`Could not query endpoint object: ${err.message}`);
-        }
-      }
+        if (!res.ok) throw new Error(`HTTP Error ${res.status}: ${res.statusText}`);
 
-      if (dev) {
-        log('Target Endpoint Payload:', dev);
-        const detectedMode = extractFramingMode(dev);
-        log(`Detected Framing Setting: ${detectedMode ? detectedMode.toUpperCase() : 'NOT SPECIFIED'}`);
+        const fullDeviceData = await res.json();
+        log('Detailed Endpoint Payload:', fullDeviceData);
+
+        const detectedMode = extractFramingMode(fullDeviceData);
+        log(`Active Framing Setting: ${detectedMode ? detectedMode.toUpperCase() : 'NOT SPECIFIED IN PAYLOAD'}`);
         highlightCurrentSetting(detectedMode);
-      } else {
-        log('Device details unavailable.');
+      } catch (err) {
+        log(`Could not fetch detailed endpoint object: ${err.message}`);
         highlightCurrentSetting(null);
       }
     }
@@ -444,5 +441,3 @@
   </script>
 </body>
 </html>
-
-```

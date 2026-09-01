@@ -316,31 +316,52 @@
     }
 
     async function fetchCurrentDeviceSettings(deviceId) {
-      log(`Fetching detailed settings object for endpoint: ${deviceId}...`);
+      log(`Fetching endpoint details for: ${deviceId}...`);
 
       const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
       const orgId = localStorage.getItem('neat_orgId');
       const apiKey = localStorage.getItem('neat_apiKey');
-      const endpointUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}`);
-      
+
       try {
-        const res = await fetch(endpointUrl, {
-          headers: { 
-            'Authorization': `Bearer ${apiKey}`, 
-            'Content-Type': 'application/json' 
-          }
+        // 1. Fetch Endpoint Metadata
+        const endpointUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}`);
+        const epRes = await fetch(endpointUrl, {
+          headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
         });
 
-        if (!res.ok) throw new Error(`HTTP Error ${res.status}: ${res.statusText}`);
+        if (!epRes.ok) throw new Error(`HTTP Error ${epRes.status}: ${epRes.statusText}`);
 
-        const fullDeviceData = await res.json();
-        log('Detailed Endpoint Payload:', fullDeviceData);
+        const dev = await epRes.json();
+        log('Endpoint Details:', dev);
 
-        const detectedMode = extractFramingMode(fullDeviceData);
+        let settingsPayload = dev;
+
+        // 2. If endpoint belongs to a Profile, fetch Profile settings
+        if (dev.profileId) {
+          log(`Endpoint is assigned to Profile ID ${dev.profileId}. Fetching inherited profile settings...`);
+          try {
+            const profileUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/profiles/${dev.profileId}`);
+            const profRes = await fetch(profileUrl, {
+              headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
+            });
+
+            if (profRes.ok) {
+              const profData = await profRes.json();
+              log('Profile Payload:', profData);
+              settingsPayload = profData;
+            }
+          } catch (pErr) {
+            log(`Could not fetch profile settings: ${pErr.message}`);
+          }
+        }
+
+        // 3. Extract framing mode setting
+        const detectedMode = extractFramingMode(settingsPayload) || extractFramingMode(dev);
         log(`Active Framing Setting: ${detectedMode ? detectedMode.toUpperCase() : 'NOT SPECIFIED IN PAYLOAD'}`);
         highlightCurrentSetting(detectedMode);
+
       } catch (err) {
-        log(`Could not fetch detailed endpoint object: ${err.message}`);
+        log(`Error querying device settings: ${err.message}`);
         highlightCurrentSetting(null);
       }
     }

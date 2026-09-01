@@ -19,174 +19,33 @@
       --radius: 8px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      padding: 24px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .container {
-      max-width: 900px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .badge {
-      background-color: #334155;
-      padding: 4px 12px;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--text-muted);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; display: flex; justify-content: center; }
+    .container { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
+    header h1 { font-size: 1.5rem; color: #fff; }
+    .badge { background-color: #334155; padding: 4px 12px; border-radius: 9999px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-muted); }
     .dot.connected { background-color: var(--success); }
-
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-
-    .card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 16px;
-      color: var(--accent);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    input, select {
-      background-color: #0f172a;
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent);
-    }
-
-    .btn {
-      background-color: var(--primary);
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .framing-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin: 16px 0;
-    }
-
-    .framing-card {
-      background: #0f172a;
-      border: 2px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 16px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s ease;
-    }
-
-    .framing-card:hover {
-      border-color: var(--accent);
-    }
-
-    .framing-card.selected {
-      border-color: var(--accent);
-      background-color: rgba(14, 165, 233, 0.1);
-    }
-
-    .framing-card h3 {
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-
-    .framing-card p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .console {
-      background-color: #090d16;
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 12px;
-      font-family: monospace;
-      font-size: 0.85rem;
-      max-height: 200px;
-      overflow-y: auto;
-      color: #7dd3fc;
-      white-space: pre-wrap;
-    }
+    .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 16px; color: var(--accent); }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.85rem; color: var(--text-muted); }
+    input, select { background-color: #0f172a; border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 0.95rem; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); }
+    .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.85rem; color: var(--text-muted); }
+    .checkbox-group input { width: auto; cursor: pointer; }
+    .btn { background-color: var(--primary); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
+    .btn:hover { background-color: var(--primary-hover); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .framing-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
+    .framing-card { background: #0f172a; border: 2px solid var(--card-border); border-radius: var(--radius); padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s ease; }
+    .framing-card:hover { border-color: var(--accent); }
+    .framing-card.selected { border-color: var(--accent); background-color: rgba(14, 165, 233, 0.1); }
+    .framing-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .framing-card p { font-size: 0.8rem; color: var(--text-muted); }
+    .console { background-color: #090d16; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.85rem; max-height: 220px; overflow-y: auto; color: #7dd3fc; white-space: pre-wrap; }
   </style>
 </head>
 <body>
@@ -200,6 +59,7 @@
       </div>
     </header>
 
+    <!-- Connection Card -->
     <div class="card">
       <h2>1. API Connection Settings</h2>
       <form id="api-form">
@@ -213,46 +73,59 @@
             <input type="text" id="orgId" placeholder="e.g. org_12345" required>
           </div>
           <div class="form-group">
-            <label for="apiKey">API Key / Token</label>
-            <input type="password" id="apiKey" placeholder="Enter your Neat Pulse API Key" required>
+            <label for="apiKey">API Key</label>
+            <input type="password" id="apiKey" placeholder="Enter API Key" required>
           </div>
         </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Endpoints</button>
-          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Saved Credentials</button>
+
+        <div class="form-group">
+          <label for="proxyUrl">CORS Proxy Prefix</label>
+          <input type="text" id="proxyUrl" value="https://corsproxy.io/?">
+          <div class="checkbox-group">
+            <input type="checkbox" id="useProxy" checked>
+            <label for="useProxy">Bypass Browser CORS (Required when calling API directly from GitHub Pages/Browser)</label>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Devices</button>
+          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Saved Key</button>
         </div>
       </form>
     </div>
 
+    <!-- Target Device Selection -->
     <div class="card">
-      <h2>2. Select Target Device / Profile</h2>
+      <h2>2. Select Target Device</h2>
       <div class="form-group">
-        <label for="deviceSelect">Select Device or Profile</label>
+        <label for="deviceSelect">Device / Room Endpoint</label>
         <select id="deviceSelect" disabled>
           <option value="">-- Connect to fetch devices --</option>
         </select>
       </div>
     </div>
 
+    <!-- Framing Mode Options -->
     <div class="card">
       <h2>3. Choose Framing Mode</h2>
       <div class="framing-options">
         <div class="framing-card" data-mode="equal" onclick="selectMode('equal')">
           <h3>Equal</h3>
-          <p>Equal-grid presentation of all room participants.</p>
+          <p>Equal-grid framing for all participants.</p>
         </div>
         <div class="framing-card" data-mode="highlights" onclick="selectMode('highlights')">
           <h3>Highlights</h3>
-          <p>Focuses dynamically on active speakers.</p>
+          <p>Focuses dynamic camera frames on active speakers.</p>
         </div>
         <div class="framing-card" data-mode="highlights_room" onclick="selectMode('highlights_room')">
           <h3>Highlights + Room</h3>
-          <p>Combines active speaker highlights with room context.</p>
+          <p>Combines active speaker tracking with full room context.</p>
         </div>
       </div>
       <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Apply Framing Mode</button>
     </div>
 
+    <!-- Debug Output -->
     <div class="card">
       <h2>API Output Console</h2>
       <div class="console" id="consoleLog">Ready to connect...</div>
@@ -262,7 +135,7 @@
   <script>
     let selectedFramingMode = null;
 
-    // Load credentials from localStorage on startup
+    // Load saved settings on startup
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
       if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
@@ -273,28 +146,34 @@
       const consoleLog = document.getElementById('consoleLog');
       const timestamp = new Date().toLocaleTimeString();
       let logMsg = `[${timestamp}] ${message}`;
-      if (data) {
-        logMsg += '\n' + JSON.stringify(data, null, 2);
-      }
+      if (data) logMsg += '\n' + JSON.stringify(data, null, 2);
       consoleLog.textContent = logMsg + '\n\n' + consoleLog.textContent;
+    }
+
+    function buildUrl(targetEndpoint) {
+      const useProxy = document.getElementById('useProxy').checked;
+      const proxyPrefix = document.getElementById('proxyUrl').value.trim();
+      return useProxy ? `${proxyPrefix}${encodeURIComponent(targetEndpoint)}` : targetEndpoint;
     }
 
     document.getElementById('api-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const baseUrl = document.getElementById('baseUrl').value.replace(/\/$/, '');
-      const orgId = document.getElementById('orgId').value;
-      const apiKey = document.getElementById('apiKey').value;
+      const orgId = document.getElementById('orgId').value.trim();
+      const apiKey = document.getElementById('apiKey').value.trim();
 
-      // Persist to localStorage
       localStorage.setItem('neat_baseUrl', baseUrl);
       localStorage.setItem('neat_orgId', orgId);
       localStorage.setItem('neat_apiKey', apiKey);
 
-      log('Fetching devices/endpoints from Neat Pulse API...');
+      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints`;
+      const finalUrl = buildUrl(targetEndpoint);
+
+      log(`Fetching devices from Neat Pulse API via: ${finalUrl}`);
       
       try {
-        const response = await fetch(`${baseUrl}/v1/orgs/${orgId}/endpoints`, {
+        const response = await fetch(finalUrl, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${apiKey}`,
@@ -303,16 +182,16 @@
         });
 
         if (!response.ok) {
-          throw new Error(`API Error ${response.status}: ${response.statusText}`);
+          throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
         }
 
         const data = await response.json();
-        log('Devices retrieved successfully.', data);
+        log('Devices retrieved successfully:', data);
 
         populateDeviceDropdown(data.endpoints || data.items || data);
         setConnectedStatus(true);
       } catch (err) {
-        log(`Connection failed: ${err.message}`);
+        log(`Connection failed: ${err.message}\nTip: Ensure "Bypass Browser CORS" is checked if running directly from GitHub Pages or a browser.`);
         setConnectedStatus(false);
       }
     });
@@ -324,7 +203,7 @@
       document.getElementById('orgId').value = '';
       document.getElementById('apiKey').value = '';
       setConnectedStatus(false);
-      log('Credentials cleared.');
+      log('Cleared saved credentials.');
     });
 
     function setConnectedStatus(isConnected) {
@@ -363,46 +242,35 @@
 
     function selectMode(mode) {
       selectedFramingMode = mode;
-      document.querySelectorAll('.framing-card').forEach(card => {
-        card.classList.remove('selected');
-      });
+      document.querySelectorAll('.framing-card').forEach(card => card.classList.remove('selected'));
       document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
       log(`Selected framing mode: ${mode.toUpperCase()}`);
     }
 
     async function applyFramingMode() {
       const deviceId = document.getElementById('deviceSelect').value;
-      if (!deviceId) {
-        alert('Please select a target device.');
-        return;
-      }
+      if (!deviceId) return alert('Please select a target device.');
+      if (!selectedFramingMode) return alert('Please select a framing mode.');
 
-      if (!selectedFramingMode) {
-        alert('Please choose a framing mode option.');
-        return;
-      }
-
-      const baseUrl = localStorage.getItem('neat_baseUrl');
+      const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
       const orgId = localStorage.getItem('neat_orgId');
       const apiKey = localStorage.getItem('neat_apiKey');
 
-      // MappingUI selection to Neat API framing settings payload values
-      const framingPayloadMap = {
-        'equal': { framing_mode: 'equal', symmetry_enabled: true },
-        'highlights': { framing_mode: 'highlights', speaker_focus: true },
-        'highlights_room': { framing_mode: 'highlights_room', speaker_focus: true, show_room: true }
-      };
+      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
+      const finalUrl = buildUrl(targetEndpoint);
 
       const payload = {
         settings: {
-          camera: framingPayloadMap[selectedFramingMode]
+          camera: {
+            framing_mode: selectedFramingMode
+          }
         }
       };
 
-      log(`Sending Framing Mode update to device ${deviceId}...`, payload);
+      log(`Sending update request...`, payload);
 
       try {
-        const response = await fetch(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`, {
+        const response = await fetch(finalUrl, {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${apiKey}`,
@@ -411,13 +279,11 @@
           body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
-          throw new Error(`Failed to update settings. Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
 
         const result = await response.json();
         log('Successfully applied framing mode!', result);
-        alert(`Framing mode "${selectedFramingMode}" successfully updated.`);
+        alert(`Framing mode standard changed to "${selectedFramingMode}".`);
       } catch (err) {
         log(`Error applying framing mode: ${err.message}`);
       }

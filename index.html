@@ -20,143 +20,420 @@
       --radius: 8px;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-    }
-    
-    body { 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      padding: 24px; 
-      display: flex; 
-      justify-content: center; 
-    }
-
-    .container { 
-      max-width: 900px; 
-      width: 100%; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 24px; 
-    }
-
-    header { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding-bottom: 16px; 
-      border-bottom: 1px solid var(--card-border); 
-    }
-
-    header h1 { 
-      font-size: 1.5rem; 
-      color: #fff; 
-    }
-
-    .badge { 
-      background-color: #334155; 
-      padding: 4px 12px; 
-      border-radius: 9999px; 
-      font-size: 0.85rem; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-    }
-
-    .dot { 
-      width: 8px; 
-      height: 8px; 
-      border-radius: 50%; 
-      background-color: var(--text-muted); 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; display: flex; justify-content: center; }
+    .container { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
+    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
+    header h1 { font-size: 1.5rem; color: #fff; }
+    .badge { background-color: #334155; padding: 4px 12px; border-radius: 9999px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-muted); }
     .dot.connected { background-color: var(--success); }
-
-    .card { 
-      background-color: var(--card-bg); 
-      border: 1px solid var(--card-border); 
-      border-radius: var(--radius); 
-      padding: 20px; 
-    }
-
-    .card h2 { 
-      font-size: 1.1rem; 
-      margin-bottom: 16px; 
-      color: var(--accent); 
-    }
-
-    .form-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-      gap: 16px; 
-      margin-bottom: 16px; 
-    }
-
-    .form-group { 
-      display: flex; 
-      flex-direction: column; 
-      gap: 6px; 
-    }
-
-    label { 
-      font-size: 0.85rem; 
-      color: var(--text-muted); 
-    }
-
-    input, select { 
-      background-color: #0f172a; 
-      border: 1px solid var(--card-border); 
-      color: var(--text-main); 
-      padding: 10px 12px; 
-      border-radius: 6px; 
-      font-size: 0.95rem; 
-      outline: none; 
-    }
-
-    input:focus, select:focus { 
-      border-color: var(--accent); 
-    }
-
-    .checkbox-group { 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-      margin-top: 8px; 
-      font-size: 0.85rem; 
-      color: var(--text-muted); 
-    }
-
-    .checkbox-group input { 
-      width: auto; 
-      cursor: pointer; 
-    }
-
-    .btn { 
-      background-color: var(--primary); 
-      color: #fff; 
-      border: none; 
-      padding: 10px 18px; 
-      border-radius: 6px; 
-      font-weight: 500; 
-      cursor: pointer; 
-      transition: background-color 0.2s; 
-    }
-
+    .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 16px; color: var(--accent); }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.85rem; color: var(--text-muted); }
+    input, select { background-color: #0f172a; border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 0.95rem; outline: none; }
+    input:focus, select:focus { border-color: var(--accent); }
+    .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.85rem; color: var(--text-muted); }
+    .checkbox-group input { width: auto; cursor: pointer; }
+    .btn { background-color: var(--primary); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
     .btn:hover { background-color: var(--primary-hover); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .framing-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
+    .framing-card { background: #0f172a; border: 2px solid var(--card-border); border-radius: var(--radius); padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s ease; position: relative; }
+    .framing-card:hover { border-color: var(--accent); }
+    .framing-card.selected { border-color: var(--accent); background-color: rgba(14, 165, 233, 0.1); }
+    .framing-card.current-setting { border-color: var(--purple) !important; background-color: rgba(168, 85, 247, 0.15) !important; box-shadow: 0 0 12px rgba(168, 85, 247, 0.3); }
+    .current-badge { display: none; position: absolute; top: 8px; right: 8px; background-color: var(--purple); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .framing-card.current-setting .current-badge { display: block; }
+    .framing-card h3 { font-size: 1rem; margin-bottom: 6px; }
+    .framing-card p { font-size: 0.8rem; color: var(--text-muted); }
+    .console { background-color: #090d16; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.85rem; max-height: 260px; overflow-y: auto; color: #7dd3fc; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
 
-    .framing-options { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-      gap: 16px; 
-      margin: 16px 0; 
+  <div class="container">
+    <header>
+      <h1>Neat Pulse - Default Framing Controller</h1>
+      <div class="badge">
+        <span id="status-dot" class="dot"></span>
+        <span id="status-text">Disconnected</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>1. API Connection Settings</h2>
+      <form id="api-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="baseUrl">Base API / Worker URL</label>
+            <input type="url" id="baseUrl" placeholder="[https://neat-pulse-proxy.your-subdomain.workers.dev](https://neat-pulse-proxy.your-subdomain.workers.dev)" required>
+          </div>
+          <div class="form-group">
+            <label for="orgId">Organization ID</label>
+            <input type="text" id="orgId" placeholder="e.g. org_12345" required>
+          </div>
+          <div class="form-group">
+            <label for="apiKey">API Key</label>
+            <input type="password" id="apiKey" placeholder="Enter API Key" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="proxyUrl">CORS Proxy Prefix (Only if NOT using Cloudflare Worker)</label>
+          <input type="text" id="proxyUrl" value="[https://corsproxy.io/](https://corsproxy.io/)?">
+          <div class="checkbox-group">
+            <input type="checkbox" id="useProxy">
+            <label for="useProxy">Prepend CORS Proxy Prefix (Leave UNCHECKED if using Cloudflare Worker)</label>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Rooms</button>
+          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Credentials</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>2. Select Target Room / Device</h2>
+      <div class="form-group">
+        <label for="deviceSelect">Target Endpoint</label>
+        <select id="deviceSelect" disabled>
+          <option value="">-- Connect to fetch devices --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3. Choose defaultFramingMode</h2>
+      <div class="framing-options">
+        <div class="framing-card" data-mode="group" onclick="selectMode('group')">
+          <span class="current-badge">Current</span>
+          <h3>Group</h3>
+          <p>Frames all participants together in a single room view.</p>
+        </div>
+        <div class="framing-card" data-mode="individual" onclick="selectMode('individual')">
+          <span class="current-badge">Current</span>
+          <h3>Individual</h3>
+          <p>Uses Neat Symmetry to frame each person into equal grid tiles.</p>
+        </div>
+        <div class="framing-card" data-mode="speaker" onclick="selectMode('speaker')">
+          <span class="current-badge">Current</span>
+          <h3>Speaker</h3>
+          <p>Focuses dynamic camera frames on active speakers.</p>
+        </div>
+        <div class="framing-card" data-mode="off" onclick="selectMode('off')">
+          <span class="current-badge">Current</span>
+          <h3>Off</h3>
+          <p>Disables automatic framing (fixed wide-angle view).</p>
+        </div>
+      </div>
+      <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Update defaultFramingMode</button>
+    </div>
+
+    <div class="card">
+      <h2>API Output Console</h2>
+      <div class="console" id="consoleLog">Ready to connect...</div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFramingMode = null;
+    let cachedDevices = [];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
+      if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
+      if (localStorage.getItem('neat_apiKey')) document.getElementById('apiKey').value = localStorage.getItem('neat_apiKey');
+    });
+
+    function log(message, data = null) {
+      const consoleLog = document.getElementById('consoleLog');
+      const timestamp = new Date().toLocaleTimeString();
+      let logMsg = `[${timestamp}] ${message}`;
+      if (data) logMsg += '\n' + JSON.stringify(data, null, 2);
+      consoleLog.textContent = logMsg + '\n\n' + consoleLog.textContent;
     }
 
-    .framing-card { 
-      background: #0f172a; 
-      border: 2px solid var(--card-border); 
-      border-radius: var(--radius); 
-      padding: 16px; 
-      cursor: pointer;
+    function buildUrl(targetEndpoint) {
+      const useProxy = document.getElementById('useProxy').checked;
+      const proxyPrefix = document.getElementById('proxyUrl').value.trim();
+      return useProxy ? `${proxyPrefix}${encodeURIComponent(targetEndpoint)}` : targetEndpoint;
+    }
+
+    document.getElementById('api-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const baseUrl = document.getElementById('baseUrl').value.replace(/\/$/, '');
+      const orgId = document.getElementById('orgId').value.trim();
+      const apiKey = document.getElementById('apiKey').value.trim();
+
+      localStorage.setItem('neat_baseUrl', baseUrl);
+      localStorage.setItem('neat_orgId', orgId);
+      localStorage.setItem('neat_apiKey', apiKey);
+
+      const endpointsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints`);
+      const roomsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/rooms`);
+
+      log(`Connecting and querying endpoints & room structures...`);
+      
+      try {
+        const [endpointsRes, roomsRes] = await Promise.allSettled([
+          fetch(endpointsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } }),
+          fetch(roomsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } })
+        ]);
+
+        if (endpointsRes.status !== 'fulfilled' || !endpointsRes.value.ok) {
+          const errStatus = endpointsRes.value ? endpointsRes.value.status : 'Network Error';
+          throw new Error(`Failed to query endpoints. HTTP Status: ${errStatus}`);
+        }
+
+        const endpointsData = await endpointsRes.value.json();
+        cachedDevices = endpointsData.endpoints || endpointsData.items || endpointsData;
+
+        let roomMap = {};
+        if (roomsRes.status === 'fulfilled' && roomsRes.value.ok) {
+          const roomsData = await roomsRes.value.json();
+          const rooms = roomsData.rooms || roomsData.items || roomsData;
+          if (Array.isArray(rooms)) {
+            rooms.forEach(room => {
+              const rName = room.name || room.room_name || room.display_name || room.title;
+              if (room.id) roomMap[room.id] = rName;
+              if (room.room_id) roomMap[room.room_id] = rName;
+              if (Array.isArray(room.endpoint_ids)) {
+                room.endpoint_ids.forEach(epId => roomMap[epId] = rName);
+              }
+              if (Array.isArray(room.endpoints)) {
+                room.endpoints.forEach(ep => {
+                  const epId = typeof ep === 'object' ? (ep.id || ep.endpoint_id) : ep;
+                  if (epId) roomMap[epId] = rName;
+                });
+              }
+            });
+          }
+        }
+
+        log('Devices & Rooms queried successfully.', cachedDevices);
+        populateDeviceDropdown(cachedDevices, roomMap);
+        setConnectedStatus(true);
+      } catch (err) {
+        log(`Connection error: ${err.message}`);
+        setConnectedStatus(false);
+      }
+    });
+
+    document.getElementById('deviceSelect').addEventListener('change', async (e) => {
+      const deviceId = e.target.value;
+      if (!deviceId) return;
+      await fetchCurrentDeviceSettings(deviceId);
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      localStorage.removeItem('neat_baseUrl');
+      localStorage.removeItem('neat_orgId');
+      localStorage.removeItem('neat_apiKey');
+      document.getElementById('orgId').value = '';
+      document.getElementById('apiKey').value = '';
+      setConnectedStatus(false);
+      log('Cleared saved credentials.');
+    });
+
+    function setConnectedStatus(isConnected) {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('status-text');
+      const applyBtn = document.getElementById('apply-btn');
+
+      if (isConnected) {
+        dot.classList.add('connected');
+        text.textContent = 'Connected';
+        applyBtn.disabled = false;
+      } else {
+        dot.classList.remove('connected');
+        text.textContent = 'Disconnected';
+        applyBtn.disabled = true;
+      }
+    }
+
+    function populateDeviceDropdown(devices, roomMap = {}) {
+      const select = document.getElementById('deviceSelect');
+      select.innerHTML = '<option value="">-- Choose a device --</option>';
+      select.disabled = false;
+
+      if (!Array.isArray(devices) || devices.length === 0) {
+        select.innerHTML = '<option value="">No devices found</option>';
+        return;
+      }
+
+      function findKeyRecursively(obj, targetSubstrings) {
+        if (!obj || typeof obj !== 'object') return null;
+
+        for (const [key, val] of Object.entries(obj)) {
+          const lowerKey = key.toLowerCase();
+          
+          if (targetSubstrings.some(sub => lowerKey.includes(sub))) {
+            if (typeof val === 'string' && val.trim().length > 0) return val;
+            if (typeof val === 'object' && val !== null) {
+              const nestedName = val.name || val.title || val.label || val.display_name;
+              if (nestedName) return nestedName;
+            }
+          }
+          
+          if (typeof val === 'object' && val !== null && key !== 'settings') {
+            const found = findKeyRecursively(val, targetSubstrings);
+            if (found) return found;
+          }
+        }
+        return null;
+      }
+
+      devices.forEach(dev => {
+        const devId = dev.id || dev.endpoint_id || dev.serial_number;
+
+        let resolvedRoom = findKeyRecursively(dev, ['room', 'space', 'location', 'site']);
+
+        if (!resolvedRoom && roomMap) {
+          const possibleIds = [devId, dev.room_id, dev.roomId, dev.space_id, dev.location_id];
+          for (const id of possibleIds) {
+            if (id && roomMap[id]) {
+              resolvedRoom = roomMap[id];
+              break;
+            }
+          }
+        }
+
+        const model = dev.model || dev.type || dev.product || 'Neat Device';
+        const customName = (dev.name && dev.name !== model) ? dev.name : null;
+        const finalDisplayName = resolvedRoom || customName || `Unassigned Room (${model})`;
+
+        const option = document.createElement('option');
+        option.value = devId;
+        option.textContent = `${finalDisplayName} — [${model}]`;
+        select.appendChild(option);
+      });
+    }
+
+    async function fetchCurrentDeviceSettings(deviceId) {
+      const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
+      const orgId = localStorage.getItem('neat_orgId');
+      const apiKey = localStorage.getItem('neat_apiKey');
+
+      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
+      const finalUrl = buildUrl(targetEndpoint);
+
+      log(`Querying current settings for endpoint ${deviceId}...`);
+
+      try {
+        const response = await fetch(finalUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+
+        const data = await response.json();
+        log(`Settings retrieved for endpoint ${deviceId}:`, data);
+
+        const cameraObj = data.settings?.camera || data.camera || data;
+        const currentMode = (
+          cameraObj.defaultFramingMode || 
+          cameraObj.default_framing_mode || 
+          cameraObj.framing_mode || 
+          cameraObj.framingMode
+        )?.toLowerCase();
+
+        highlightCurrentSetting(currentMode);
+      } catch (err) {
+        log(`Could not fetch settings: ${err.message}`);
+        
+        const dev = cachedDevices.find(d => (d.id || d.endpoint_id) === deviceId);
+        if (dev && dev.settings?.camera) {
+          const currentMode = (
+            dev.settings.camera.defaultFramingMode || 
+            dev.settings.camera.default_framing_mode || 
+            dev.settings.camera.framing_mode
+          )?.toLowerCase();
+          highlightCurrentSetting(currentMode);
+        } else {
+          highlightCurrentSetting(null);
+        }
+      }
+    }
+
+    function highlightCurrentSetting(mode) {
+      document.querySelectorAll('.framing-card').forEach(card => {
+        card.classList.remove('current-setting');
+      });
+
+      if (!mode) return;
+
+      let targetMode = mode;
+      if (mode.includes('group')) targetMode = 'group';
+      else if (mode.includes('indiv') || mode.includes('equal') || mode.includes('symmetry')) targetMode = 'individual';
+      else if (mode.includes('speak') || mode.includes('highl')) targetMode = 'speaker';
+      else if (mode.includes('off') || mode.includes('disable')) targetMode = 'off';
+
+      const currentCard = document.querySelector(`.framing-card[data-mode="${targetMode}"]`);
+      if (currentCard) {
+        currentCard.classList.add('current-setting');
+        log(`Current framing mode active on device: ${targetMode.toUpperCase()}`);
+      }
+    }
+
+    function selectMode(mode) {
+      selectedFramingMode = mode;
+      document.querySelectorAll('.framing-card').forEach(card => card.classList.remove('selected'));
+      document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+      log(`Selected new defaultFramingMode target: ${mode.toUpperCase()}`);
+    }
+
+    async function applyFramingMode() {
+      const deviceId = document.getElementById('deviceSelect').value;
+      if (!deviceId) return alert('Please select a target device.');
+      if (!selectedFramingMode) return alert('Please choose a default framing mode option.');
+
+      const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
+      const orgId = localStorage.getItem('neat_orgId');
+      const apiKey = localStorage.getItem('neat_apiKey');
+
+      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
+      const finalUrl = buildUrl(targetEndpoint);
+
+      const payload = {
+        settings: {
+          camera: {
+            defaultFramingMode: selectedFramingMode
+          }
+        }
+      };
+
+      log(`Updating defaultFramingMode for endpoint ${deviceId}...`, payload);
+
+      try {
+        const response = await fetch(finalUrl, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+
+        const result = await response.json();
+        log('Successfully updated defaultFramingMode!', result);
+        highlightCurrentSetting(selectedFramingMode);
+        alert(`defaultFramingMode updated to "${selectedFramingMode}".`);
+      } catch (err) {
+        log(`Error applying defaultFramingMode: ${err.message}`);
+      }
+    }
+  </script>
+</body>
+</html>

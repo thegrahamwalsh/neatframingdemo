@@ -244,17 +244,21 @@
     <div class="card">
       <h2>3. Choose defaultFramingMode</h2>
       <div class="framing-options">
-        <div class="framing-card" data-mode="equal" onclick="selectMode('equal')">
-          <h3>Equal</h3>
-          <p>Sets default framing to equal-grid view.</p>
+        <div class="framing-card" data-mode="group" onclick="selectMode('group')">
+          <h3>Group</h3>
+          <p>Frames all participants together in a single room view.</p>
         </div>
-        <div class="framing-card" data-mode="highlights" onclick="selectMode('highlights')">
-          <h3>Highlights</h3>
-          <p>Sets default framing to active speaker highlights.</p>
+        <div class="framing-card" data-mode="individual" onclick="selectMode('individual')">
+          <h3>Individual</h3>
+          <p>Uses Neat Symmetry to frame each person into equal grid tiles.</p>
         </div>
-        <div class="framing-card" data-mode="highlights_room" onclick="selectMode('highlights_room')">
-          <h3>Highlights + Room</h3>
-          <p>Sets default framing to speaker highlights with room context.</p>
+        <div class="framing-card" data-mode="speaker" onclick="selectMode('speaker')">
+          <h3>Speaker</h3>
+          <p>Focuses dynamic camera frames on active speakers.</p>
+        </div>
+        <div class="framing-card" data-mode="off" onclick="selectMode('off')">
+          <h3>Off</h3>
+          <p>Disables automatic framing (fixed wide-angle view).</p>
         </div>
       </div>
       <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Update defaultFramingMode</button>
@@ -453,13 +457,10 @@
       const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
       const finalUrl = buildUrl(targetEndpoint);
 
-      // Sending both standard camelCase and snake_case properties to cover all Neat firmware schemas
       const payload = {
         settings: {
           camera: {
-            defaultFramingMode: selectedFramingMode,
-            default_framing_mode: selectedFramingMode,
-            framing_mode: selectedFramingMode
+            defaultFramingMode: selectedFramingMode
           }
         }
       };

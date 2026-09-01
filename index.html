@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neat Pulse - Framing Mode Controller</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent: #0ea5e9;
+      --success: #10b981;
+      --danger: #ef4444;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .badge {
+      background-color: #334155;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--text-muted);
+    }
+    .dot.connected { background-color: var(--success); }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    input, select {
+      background-color: #0f172a;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .framing-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .framing-card {
+      background: #0f172a;
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .framing-card:hover {
+      border-color: var(--accent);
+    }
+
+    .framing-card.selected {
+      border-color: var(--accent);
+      background-color: rgba(14, 165, 233, 0.1);
+    }
+
+    .framing-card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .framing-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .console {
+      background-color: #090d16;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      max-height: 200px;
+      overflow-y: auto;
+      color: #7dd3fc;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Neat Pulse Framing Controller</h1>
+      <div class="badge">
+        <span id="status-dot" class="dot"></span>
+        <span id="status-text">Disconnected</span>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>1. API Connection Settings</h2>
+      <form id="api-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="baseUrl">Base API URL</label>
+            <input type="url" id="baseUrl" value="https://api.pulse.neat.no" required>
+          </div>
+          <div class="form-group">
+            <label for="orgId">Organization ID</label>
+            <input type="text" id="orgId" placeholder="e.g. org_12345" required>
+          </div>
+          <div class="form-group">
+            <label for="apiKey">API Key / Token</label>
+            <input type="password" id="apiKey" placeholder="Enter your Neat Pulse API Key" required>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Endpoints</button>
+          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Saved Credentials</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>2. Select Target Device / Profile</h2>
+      <div class="form-group">
+        <label for="deviceSelect">Select Device or Profile</label>
+        <select id="deviceSelect" disabled>
+          <option value="">-- Connect to fetch devices --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3. Choose Framing Mode</h2>
+      <div class="framing-options">
+        <div class="framing-card" data-mode="equal" onclick="selectMode('equal')">
+          <h3>Equal</h3>
+          <p>Equal-grid presentation of all room participants.</p>
+        </div>
+        <div class="framing-card" data-mode="highlights" onclick="selectMode('highlights')">
+          <h3>Highlights</h3>
+          <p>Focuses dynamically on active speakers.</p>
+        </div>
+        <div class="framing-card" data-mode="highlights_room" onclick="selectMode('highlights_room')">
+          <h3>Highlights + Room</h3>
+          <p>Combines active speaker highlights with room context.</p>
+        </div>
+      </div>
+      <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Apply Framing Mode</button>
+    </div>
+
+    <div class="card">
+      <h2>API Output Console</h2>
+      <div class="console" id="consoleLog">Ready to connect...</div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFramingMode = null;
+
+    // Load credentials from localStorage on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
+      if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
+      if (localStorage.getItem('neat_apiKey')) document.getElementById('apiKey').value = localStorage.getItem('neat_apiKey');
+    });
+
+    function log(message, data = null) {
+      const consoleLog = document.getElementById('consoleLog');
+      const timestamp = new Date().toLocaleTimeString();
+      let logMsg = `[${timestamp}] ${message}`;
+      if (data) {
+        logMsg += '\n' + JSON.stringify(data, null, 2);
+      }
+      consoleLog.textContent = logMsg + '\n\n' + consoleLog.textContent;
+    }
+
+    document.getElementById('api-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const baseUrl = document.getElementById('baseUrl').value.replace(/\/$/, '');
+      const orgId = document.getElementById('orgId').value;
+      const apiKey = document.getElementById('apiKey').value;
+
+      // Persist to localStorage
+      localStorage.setItem('neat_baseUrl', baseUrl);
+      localStorage.setItem('neat_orgId', orgId);
+      localStorage.setItem('neat_apiKey', apiKey);
+
+      log('Fetching devices/endpoints from Neat Pulse API...');
+      
+      try {
+        const response = await fetch(`${baseUrl}/v1/orgs/${orgId}/endpoints`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`API Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        log('Devices retrieved successfully.', data);
+
+        populateDeviceDropdown(data.endpoints || data.items || data);
+        setConnectedStatus(true);
+      } catch (err) {
+        log(`Connection failed: ${err.message}`);
+        setConnectedStatus(false);
+      }
+    });
+
+    document.getElementById('clear-btn').addEventListener('click', () => {
+      localStorage.removeItem('neat_baseUrl');
+      localStorage.removeItem('neat_orgId');
+      localStorage.removeItem('neat_apiKey');
+      document.getElementById('orgId').value = '';
+      document.getElementById('apiKey').value = '';
+      setConnectedStatus(false);
+      log('Credentials cleared.');
+    });
+
+    function setConnectedStatus(isConnected) {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('status-text');
+      const applyBtn = document.getElementById('apply-btn');
+
+      if (isConnected) {
+        dot.classList.add('connected');
+        text.textContent = 'Connected';
+        applyBtn.disabled = false;
+      } else {
+        dot.classList.remove('connected');
+        text.textContent = 'Disconnected';
+        applyBtn.disabled = true;
+      }
+    }
+
+    function populateDeviceDropdown(devices) {
+      const select = document.getElementById('deviceSelect');
+      select.innerHTML = '';
+      select.disabled = false;
+
+      if (!Array.isArray(devices) || devices.length === 0) {
+        select.innerHTML = '<option value="">No devices found</option>';
+        return;
+      }
+
+      devices.forEach(dev => {
+        const option = document.createElement('option');
+        option.value = dev.id || dev.endpoint_id;
+        option.textContent = `${dev.name || 'Unnamed Device'} (${dev.model || dev.type || 'Neat Device'})`;
+        select.appendChild(option);
+      });
+    }
+
+    function selectMode(mode) {
+      selectedFramingMode = mode;
+      document.querySelectorAll('.framing-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+      log(`Selected framing mode: ${mode.toUpperCase()}`);
+    }
+
+    async function applyFramingMode() {
+      const deviceId = document.getElementById('deviceSelect').value;
+      if (!deviceId) {
+        alert('Please select a target device.');
+        return;
+      }
+
+      if (!selectedFramingMode) {
+        alert('Please choose a framing mode option.');
+        return;
+      }
+
+      const baseUrl = localStorage.getItem('neat_baseUrl');
+      const orgId = localStorage.getItem('neat_orgId');
+      const apiKey = localStorage.getItem('neat_apiKey');
+
+      // MappingUI selection to Neat API framing settings payload values
+      const framingPayloadMap = {
+        'equal': { framing_mode: 'equal', symmetry_enabled: true },
+        'highlights': { framing_mode: 'highlights', speaker_focus: true },
+        'highlights_room': { framing_mode: 'highlights_room', speaker_focus: true, show_room: true }
+      };
+
+      const payload = {
+        settings: {
+          camera: framingPayloadMap[selectedFramingMode]
+        }
+      };
+
+      log(`Sending Framing Mode update to device ${deviceId}...`, payload);
+
+      try {
+        const response = await fetch(`${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to update settings. Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        log('Successfully applied framing mode!', result);
+        alert(`Framing mode "${selectedFramingMode}" successfully updated.`);
+      } catch (err) {
+        log(`Error applying framing mode: ${err.message}`);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -223,20 +223,45 @@
     }
 
     function populateDeviceDropdown(devices) {
-      const select = document.getElementById('deviceSelect');
-      select.innerHTML = '';
-      select.disabled = false;
+  const select = document.getElementById('deviceSelect');
+  select.innerHTML = '';
+  select.disabled = false;
 
-      if (!Array.isArray(devices) || devices.length === 0) {
-        select.innerHTML = '<option value="">No devices found</option>';
-        return;
-      }
+  if (!Array.isArray(devices) || devices.length === 0) {
+    select.innerHTML = '<option value="">No devices found</option>';
+    return;
+  }
 
-      devices.forEach(dev => {
-        const option = document.createElement('option');
-        option.value = dev.id || dev.endpoint_id;
-        option.textContent = `${dev.name || 'Unnamed Device'} (${dev.model || dev.type || 'Neat Device'})`;
-        select.appendChild(option);
+  // Log the first device object in console so you can inspect exact field names
+  if (devices[0]) {
+    log('Sample Endpoint JSON structure:', devices[0]);
+  }
+
+  devices.forEach(dev => {
+    // 1. Resolve Room Name across Neat Pulse API payload variations
+    const roomName = 
+      dev.room_name || 
+      (typeof dev.room === 'object' && dev.room !== null ? dev.room.name : dev.room) ||
+      dev.space_name ||
+      (typeof dev.space === 'object' && dev.space !== null ? dev.space.name : dev.space) ||
+      dev.location_name ||
+      dev.location ||
+      dev.display_name ||
+      dev.name || 
+      'Unnamed Room';
+
+    // 2. Resolve Model string (e.g., NF21D1, Neat Frame, Neat Bar)
+    const model = dev.model || dev.type || '';
+    
+    // 3. Format the display string (e.g. "Conference Room 101 — NF21D1")
+    const displayText = (model && roomName !== model)
+      ? `${roomName} (${model})`
+      : roomName;
+
+    const option = document.createElement('option');
+    option.value = dev.id || dev.endpoint_id;
+    option.textContent = displayText;
+    select.appendChild(option);
       });
     }
 

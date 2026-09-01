@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neat Pulse - Framing Mode Controller</title>
+  <title>Neat Pulse - Default Framing Mode Controller</title>
   <style>
     :root {
       --bg-color: #0f172a;
@@ -190,7 +190,7 @@
 
   <div class="container">
     <header>
-      <h1>Neat Pulse Framing Controller</h1>
+      <h1>Neat Pulse - Default Framing Controller</h1>
       <div class="badge">
         <span id="status-dot" class="dot"></span>
         <span id="status-text">Disconnected</span>
@@ -242,22 +242,22 @@
     </div>
 
     <div class="card">
-      <h2>3. Choose Framing Mode</h2>
+      <h2>3. Choose defaultFramingMode</h2>
       <div class="framing-options">
         <div class="framing-card" data-mode="equal" onclick="selectMode('equal')">
           <h3>Equal</h3>
-          <p>Equal-grid framing for all room participants.</p>
+          <p>Sets default framing to equal-grid view.</p>
         </div>
         <div class="framing-card" data-mode="highlights" onclick="selectMode('highlights')">
           <h3>Highlights</h3>
-          <p>Focuses dynamic camera frames on active speakers.</p>
+          <p>Sets default framing to active speaker highlights.</p>
         </div>
         <div class="framing-card" data-mode="highlights_room" onclick="selectMode('highlights_room')">
           <h3>Highlights + Room</h3>
-          <p>Combines active speaker tracking with full room context.</p>
+          <p>Sets default framing to speaker highlights with room context.</p>
         </div>
       </div>
-      <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Apply Framing Mode</button>
+      <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Update defaultFramingMode</button>
     </div>
 
     <div class="card">
@@ -269,7 +269,6 @@
   <script>
     let selectedFramingMode = null;
 
-    // Restore stored configuration from localStorage on startup
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
       if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
@@ -307,7 +306,6 @@
       log(`Connecting and querying endpoints & room structures...`);
       
       try {
-        // Query both endpoints and rooms APIs in parallel
         const [endpointsRes, roomsRes] = await Promise.allSettled([
           fetch(endpointsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } }),
           fetch(roomsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } })
@@ -321,7 +319,6 @@
         const endpointsData = await endpointsRes.value.json();
         const devices = endpointsData.endpoints || endpointsData.items || endpointsData;
 
-        // Construct room lookup map if rooms API returned data
         let roomMap = {};
         if (roomsRes.status === 'fulfilled' && roomsRes.value.ok) {
           const roomsData = await roomsRes.value.json();
@@ -389,12 +386,6 @@
         return;
       }
 
-      // Output sample JSON structure to console for validation
-      if (devices[0]) {
-        log('--- DEBUG: Raw Sample Endpoint Payload ---', devices[0]);
-      }
-
-      // Recursive search function to extract room, space, location or site identifiers
       function findKeyRecursively(obj, targetSubstrings) {
         if (!obj || typeof obj !== 'object') return null;
 
@@ -420,10 +411,8 @@
       devices.forEach(dev => {
         const devId = dev.id || dev.endpoint_id || dev.serial_number;
 
-        // 1. Perform deep recursive key search across endpoint properties
         let resolvedRoom = findKeyRecursively(dev, ['room', 'space', 'location', 'site']);
 
-        // 2. Fall back to cross-referencing with the room API map
         if (!resolvedRoom && roomMap) {
           const possibleIds = [devId, dev.room_id, dev.roomId, dev.space_id, dev.location_id];
           for (const id of possibleIds) {
@@ -434,7 +423,6 @@
           }
         }
 
-        // 3. Fall back to hardware profile/model string if unassigned
         const model = dev.model || dev.type || dev.product || 'Neat Device';
         const customName = (dev.name && dev.name !== model) ? dev.name : null;
         const finalDisplayName = resolvedRoom || customName || `Unassigned Room (${model})`;
@@ -450,13 +438,13 @@
       selectedFramingMode = mode;
       document.querySelectorAll('.framing-card').forEach(card => card.classList.remove('selected'));
       document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
-      log(`Selected framing mode target: ${mode.toUpperCase()}`);
+      log(`Selected defaultFramingMode: ${mode.toUpperCase()}`);
     }
 
     async function applyFramingMode() {
       const deviceId = document.getElementById('deviceSelect').value;
       if (!deviceId) return alert('Please select a target device.');
-      if (!selectedFramingMode) return alert('Please choose a framing mode.');
+      if (!selectedFramingMode) return alert('Please choose a default framing mode option.');
 
       const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
       const orgId = localStorage.getItem('neat_orgId');
@@ -465,15 +453,18 @@
       const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints/${deviceId}/settings`;
       const finalUrl = buildUrl(targetEndpoint);
 
+      // Sending both standard camelCase and snake_case properties to cover all Neat firmware schemas
       const payload = {
         settings: {
           camera: {
+            defaultFramingMode: selectedFramingMode,
+            default_framing_mode: selectedFramingMode,
             framing_mode: selectedFramingMode
           }
         }
       };
 
-      log(`Updating framing mode for endpoint ${deviceId}...`, payload);
+      log(`Updating defaultFramingMode for endpoint ${deviceId}...`, payload);
 
       try {
         const response = await fetch(finalUrl, {
@@ -488,10 +479,10 @@
         if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
 
         const result = await response.json();
-        log('Successfully applied framing mode update!', result);
-        alert(`Framing mode updated to "${selectedFramingMode}".`);
+        log('Successfully updated defaultFramingMode!', result);
+        alert(`defaultFramingMode updated to "${selectedFramingMode}".`);
       } catch (err) {
-        log(`Error applying framing mode: ${err.message}`);
+        log(`Error applying defaultFramingMode: ${err.message}`);
       }
     }
   </script>

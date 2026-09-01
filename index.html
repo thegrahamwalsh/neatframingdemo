@@ -179,7 +179,7 @@
       padding: 12px; 
       font-family: monospace; 
       font-size: 0.85rem; 
-      max-height: 240px; 
+      max-height: 260px; 
       overflow-y: auto; 
       color: #7dd3fc; 
       white-space: pre-wrap; 
@@ -197,7 +197,6 @@
       </div>
     </header>
 
-    <!-- Connection Card -->
     <div class="card">
       <h2>1. API Connection Settings</h2>
       <form id="api-form">
@@ -232,7 +231,6 @@
       </form>
     </div>
 
-    <!-- Target Room/Device Selection -->
     <div class="card">
       <h2>2. Select Target Room / Device</h2>
       <div class="form-group">
@@ -243,13 +241,12 @@
       </div>
     </div>
 
-    <!-- Framing Mode Options -->
     <div class="card">
       <h2>3. Choose Framing Mode</h2>
       <div class="framing-options">
         <div class="framing-card" data-mode="equal" onclick="selectMode('equal')">
           <h3>Equal</h3>
-          <p>Equal-grid framing for all participants.</p>
+          <p>Equal-grid framing for all room participants.</p>
         </div>
         <div class="framing-card" data-mode="highlights" onclick="selectMode('highlights')">
           <h3>Highlights</h3>
@@ -263,7 +260,6 @@
       <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Apply Framing Mode</button>
     </div>
 
-    <!-- Output Console -->
     <div class="card">
       <h2>API Output Console</h2>
       <div class="console" id="consoleLog">Ready to connect...</div>
@@ -273,7 +269,7 @@
   <script>
     let selectedFramingMode = null;
 
-    // Load saved settings from localStorage
+    // Restore stored configuration from localStorage on startup
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
       if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
@@ -308,10 +304,10 @@
       const endpointsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints`);
       const roomsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/rooms`);
 
-      log(`Fetching endpoints & room metadata from Neat Pulse API...`);
+      log(`Connecting and querying endpoints & room structures...`);
       
       try {
-        // Query both endpoints and rooms in parallel
+        // Query both endpoints and rooms APIs in parallel
         const [endpointsRes, roomsRes] = await Promise.allSettled([
           fetch(endpointsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } }),
           fetch(roomsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } })
@@ -319,20 +315,20 @@
 
         if (endpointsRes.status !== 'fulfilled' || !endpointsRes.value.ok) {
           const errStatus = endpointsRes.value ? endpointsRes.value.status : 'Network Error';
-          throw new Error(`Failed to fetch endpoints. HTTP Status: ${errStatus}`);
+          throw new Error(`Failed to query endpoints. HTTP Status: ${errStatus}`);
         }
 
         const endpointsData = await endpointsRes.value.json();
         const devices = endpointsData.endpoints || endpointsData.items || endpointsData;
 
-        // Construct room lookup map if room query succeeded
+        // Construct room lookup map if rooms API returned data
         let roomMap = {};
         if (roomsRes.status === 'fulfilled' && roomsRes.value.ok) {
           const roomsData = await roomsRes.value.json();
           const rooms = roomsData.rooms || roomsData.items || roomsData;
           if (Array.isArray(rooms)) {
             rooms.forEach(room => {
-              const rName = room.name || room.room_name || room.display_name;
+              const rName = room.name || room.room_name || room.display_name || room.title;
               if (room.id) roomMap[room.id] = rName;
               if (room.room_id) roomMap[room.room_id] = rName;
               if (Array.isArray(room.endpoint_ids)) {
@@ -348,11 +344,11 @@
           }
         }
 
-        log('Devices & Rooms retrieved successfully.', devices);
+        log('Devices & Rooms queried successfully.', devices);
         populateDeviceDropdown(devices, roomMap);
         setConnectedStatus(true);
       } catch (err) {
-        log(`Connection failed: ${err.message}`);
+        log(`Connection error: ${err.message}`);
         setConnectedStatus(false);
       }
     });
@@ -393,39 +389,59 @@
         return;
       }
 
-      // Print first raw device payload to console for verification
+      // Output sample JSON structure to console for validation
       if (devices[0]) {
-        log('Sample Raw Device JSON:', devices[0]);
+        log('--- DEBUG: Raw Sample Endpoint Payload ---', devices[0]);
+      }
+
+      // Recursive search function to extract room, space, location or site identifiers
+      function findKeyRecursively(obj, targetSubstrings) {
+        if (!obj || typeof obj !== 'object') return null;
+
+        for (const [key, val] of Object.entries(obj)) {
+          const lowerKey = key.toLowerCase();
+          
+          if (targetSubstrings.some(sub => lowerKey.includes(sub))) {
+            if (typeof val === 'string' && val.trim().length > 0) return val;
+            if (typeof val === 'object' && val !== null) {
+              const nestedName = val.name || val.title || val.label || val.display_name;
+              if (nestedName) return nestedName;
+            }
+          }
+          
+          if (typeof val === 'object' && val !== null && key !== 'settings') {
+            const found = findKeyRecursively(val, targetSubstrings);
+            if (found) return found;
+          }
+        }
+        return null;
       }
 
       devices.forEach(dev => {
-        const devId = dev.id || dev.endpoint_id;
+        const devId = dev.id || dev.endpoint_id || dev.serial_number;
 
-        // Extract direct embedded room names
-        let roomName = 
-          dev.room_name || 
-          dev.roomName ||
-          (typeof dev.room === 'object' && dev.room !== null ? dev.room.name : (typeof dev.room === 'string' ? dev.room : null)) ||
-          (typeof dev.space === 'object' && dev.space !== null ? dev.space.name : dev.space_name) ||
-          dev.location_name ||
-          dev.display_name;
+        // 1. Perform deep recursive key search across endpoint properties
+        let resolvedRoom = findKeyRecursively(dev, ['room', 'space', 'location', 'site']);
 
-        // Fall back to room lookup map via device ID or room ID
-        if (!roomName && roomMap) {
-          roomName = roomMap[devId] || (dev.room_id ? roomMap[dev.room_id] : null);
+        // 2. Fall back to cross-referencing with the room API map
+        if (!resolvedRoom && roomMap) {
+          const possibleIds = [devId, dev.room_id, dev.roomId, dev.space_id, dev.location_id];
+          for (const id of possibleIds) {
+            if (id && roomMap[id]) {
+              resolvedRoom = roomMap[id];
+              break;
+            }
+          }
         }
 
-        const model = dev.model || dev.type || 'Neat Device';
-        const fallbackName = dev.name && dev.name !== model ? dev.name : 'Unassigned Room';
-        const finalRoomName = roomName || fallbackName;
-
-        const displayText = (finalRoomName !== model) 
-          ? `${finalRoomName} (${model})`
-          : `${finalRoomName} - ${devId.substring(0, 8)}`;
+        // 3. Fall back to hardware profile/model string if unassigned
+        const model = dev.model || dev.type || dev.product || 'Neat Device';
+        const customName = (dev.name && dev.name !== model) ? dev.name : null;
+        const finalDisplayName = resolvedRoom || customName || `Unassigned Room (${model})`;
 
         const option = document.createElement('option');
         option.value = devId;
-        option.textContent = displayText;
+        option.textContent = `${finalDisplayName} — [${model}]`;
         select.appendChild(option);
       });
     }
@@ -434,7 +450,7 @@
       selectedFramingMode = mode;
       document.querySelectorAll('.framing-card').forEach(card => card.classList.remove('selected'));
       document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
-      log(`Selected framing mode: ${mode.toUpperCase()}`);
+      log(`Selected framing mode target: ${mode.toUpperCase()}`);
     }
 
     async function applyFramingMode() {
@@ -472,7 +488,7 @@
         if (!response.ok) throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
 
         const result = await response.json();
-        log('Successfully applied framing mode!', result);
+        log('Successfully applied framing mode update!', result);
         alert(`Framing mode updated to "${selectedFramingMode}".`);
       } catch (err) {
         log(`Error applying framing mode: ${err.message}`);

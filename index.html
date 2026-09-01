@@ -19,33 +19,171 @@
       --radius: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text-main); padding: 24px; display: flex; justify-content: center; }
-    .container { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 24px; }
-    header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--card-border); }
-    header h1 { font-size: 1.5rem; color: #fff; }
-    .badge { background-color: #334155; padding: 4px 12px; border-radius: 9999px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background-color: var(--text-muted); }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    }
+    
+    body { 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
+      padding: 24px; 
+      display: flex; 
+      justify-content: center; 
+    }
+
+    .container { 
+      max-width: 900px; 
+      width: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 24px; 
+    }
+
+    header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding-bottom: 16px; 
+      border-bottom: 1px solid var(--card-border); 
+    }
+
+    header h1 { 
+      font-size: 1.5rem; 
+      color: #fff; 
+    }
+
+    .badge { 
+      background-color: #334155; 
+      padding: 4px 12px; 
+      border-radius: 9999px; 
+      font-size: 0.85rem; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+    }
+
+    .dot { 
+      width: 8px; 
+      height: 8px; 
+      border-radius: 50%; 
+      background-color: var(--text-muted); 
+    }
     .dot.connected { background-color: var(--success); }
-    .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 20px; }
-    .card h2 { font-size: 1.1rem; margin-bottom: 16px; color: var(--accent); }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    label { font-size: 0.85rem; color: var(--text-muted); }
-    input, select { background-color: #0f172a; border: 1px solid var(--card-border); color: var(--text-main); padding: 10px 12px; border-radius: 6px; font-size: 0.95rem; outline: none; }
-    input:focus, select:focus { border-color: var(--accent); }
-    .checkbox-group { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.85rem; color: var(--text-muted); }
-    .checkbox-group input { width: auto; cursor: pointer; }
-    .btn { background-color: var(--primary); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
+
+    .card { 
+      background-color: var(--card-bg); 
+      border: 1px solid var(--card-border); 
+      border-radius: var(--radius); 
+      padding: 20px; 
+    }
+
+    .card h2 { 
+      font-size: 1.1rem; 
+      margin-bottom: 16px; 
+      color: var(--accent); 
+    }
+
+    .form-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+      gap: 16px; 
+      margin-bottom: 16px; 
+    }
+
+    .form-group { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+    }
+
+    label { 
+      font-size: 0.85rem; 
+      color: var(--text-muted); 
+    }
+
+    input, select { 
+      background-color: #0f172a; 
+      border: 1px solid var(--card-border); 
+      color: var(--text-main); 
+      padding: 10px 12px; 
+      border-radius: 6px; 
+      font-size: 0.95rem; 
+      outline: none; 
+    }
+
+    input:focus, select:focus { 
+      border-color: var(--accent); 
+    }
+
+    .checkbox-group { 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      margin-top: 8px; 
+      font-size: 0.85rem; 
+      color: var(--text-muted); 
+    }
+
+    .checkbox-group input { 
+      width: auto; 
+      cursor: pointer; 
+    }
+
+    .btn { 
+      background-color: var(--primary); 
+      color: #fff; 
+      border: none; 
+      padding: 10px 18px; 
+      border-radius: 6px; 
+      font-weight: 500; 
+      cursor: pointer; 
+      transition: background-color 0.2s; 
+    }
+
     .btn:hover { background-color: var(--primary-hover); }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .framing-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 16px 0; }
-    .framing-card { background: #0f172a; border: 2px solid var(--card-border); border-radius: var(--radius); padding: 16px; cursor: pointer; text-align: center; transition: all 0.2s ease; }
+
+    .framing-options { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+      gap: 16px; 
+      margin: 16px 0; 
+    }
+
+    .framing-card { 
+      background: #0f172a; 
+      border: 2px solid var(--card-border); 
+      border-radius: var(--radius); 
+      padding: 16px; 
+      cursor: pointer; 
+      text-align: center; 
+      transition: all 0.2s ease; 
+    }
+
     .framing-card:hover { border-color: var(--accent); }
-    .framing-card.selected { border-color: var(--accent); background-color: rgba(14, 165, 233, 0.1); }
+    .framing-card.selected { 
+      border-color: var(--accent); 
+      background-color: rgba(14, 165, 233, 0.1); 
+    }
+
     .framing-card h3 { font-size: 1rem; margin-bottom: 6px; }
     .framing-card p { font-size: 0.8rem; color: var(--text-muted); }
-    .console { background-color: #090d16; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 0.85rem; max-height: 220px; overflow-y: auto; color: #7dd3fc; white-space: pre-wrap; }
+
+    .console { 
+      background-color: #090d16; 
+      border: 1px solid var(--card-border); 
+      border-radius: 6px; 
+      padding: 12px; 
+      font-family: monospace; 
+      font-size: 0.85rem; 
+      max-height: 240px; 
+      overflow-y: auto; 
+      color: #7dd3fc; 
+      white-space: pre-wrap; 
+    }
   </style>
 </head>
 <body>
@@ -65,8 +203,8 @@
       <form id="api-form">
         <div class="form-grid">
           <div class="form-group">
-            <label for="baseUrl">Base API URL</label>
-            <input type="url" id="baseUrl" value="https://api.pulse.neat.no" required>
+            <label for="baseUrl">Base API / Worker URL</label>
+            <input type="url" id="baseUrl" placeholder="https://neat-pulse-proxy.your-subdomain.workers.dev" required>
           </div>
           <div class="form-group">
             <label for="orgId">Organization ID</label>
@@ -79,26 +217,26 @@
         </div>
 
         <div class="form-group">
-          <label for="proxyUrl">CORS Proxy Prefix</label>
+          <label for="proxyUrl">CORS Proxy Prefix (Only if NOT using Cloudflare Worker)</label>
           <input type="text" id="proxyUrl" value="https://corsproxy.io/?">
           <div class="checkbox-group">
-            <input type="checkbox" id="useProxy" checked>
-            <label for="useProxy">Bypass Browser CORS (Required when calling API directly from GitHub Pages/Browser)</label>
+            <input type="checkbox" id="useProxy">
+            <label for="useProxy">Prepend CORS Proxy Prefix (Leave UNCHECKED if using Cloudflare Worker)</label>
           </div>
         </div>
 
         <div style="display: flex; gap: 12px; margin-top: 16px;">
-          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Devices</button>
-          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Saved Key</button>
+          <button type="submit" class="btn" id="connect-btn">Connect & Fetch Rooms</button>
+          <button type="button" class="btn" style="background-color: #475569;" id="clear-btn">Clear Credentials</button>
         </div>
       </form>
     </div>
 
-    <!-- Target Device Selection -->
+    <!-- Target Room/Device Selection -->
     <div class="card">
-      <h2>2. Select Target Device</h2>
+      <h2>2. Select Target Room / Device</h2>
       <div class="form-group">
-        <label for="deviceSelect">Device / Room Endpoint</label>
+        <label for="deviceSelect">Target Endpoint</label>
         <select id="deviceSelect" disabled>
           <option value="">-- Connect to fetch devices --</option>
         </select>
@@ -125,7 +263,7 @@
       <button class="btn" id="apply-btn" onclick="applyFramingMode()" disabled>Apply Framing Mode</button>
     </div>
 
-    <!-- Debug Output -->
+    <!-- Output Console -->
     <div class="card">
       <h2>API Output Console</h2>
       <div class="console" id="consoleLog">Ready to connect...</div>
@@ -135,7 +273,7 @@
   <script>
     let selectedFramingMode = null;
 
-    // Load saved settings on startup
+    // Load saved settings from localStorage
     window.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('neat_baseUrl')) document.getElementById('baseUrl').value = localStorage.getItem('neat_baseUrl');
       if (localStorage.getItem('neat_orgId')) document.getElementById('orgId').value = localStorage.getItem('neat_orgId');
@@ -167,31 +305,54 @@
       localStorage.setItem('neat_orgId', orgId);
       localStorage.setItem('neat_apiKey', apiKey);
 
-      const targetEndpoint = `${baseUrl}/v1/orgs/${orgId}/endpoints`;
-      const finalUrl = buildUrl(targetEndpoint);
+      const endpointsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/endpoints`);
+      const roomsUrl = buildUrl(`${baseUrl}/v1/orgs/${orgId}/rooms`);
 
-      log(`Fetching devices from Neat Pulse API via: ${finalUrl}`);
+      log(`Fetching endpoints & room metadata from Neat Pulse API...`);
       
       try {
-        const response = await fetch(finalUrl, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        // Query both endpoints and rooms in parallel
+        const [endpointsRes, roomsRes] = await Promise.allSettled([
+          fetch(endpointsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } }),
+          fetch(roomsUrl, { headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' } })
+        ]);
 
-        if (!response.ok) {
-          throw new Error(`HTTP Error ${response.status}: ${response.statusText}`);
+        if (endpointsRes.status !== 'fulfilled' || !endpointsRes.value.ok) {
+          const errStatus = endpointsRes.value ? endpointsRes.value.status : 'Network Error';
+          throw new Error(`Failed to fetch endpoints. HTTP Status: ${errStatus}`);
         }
 
-        const data = await response.json();
-        log('Devices retrieved successfully:', data);
+        const endpointsData = await endpointsRes.value.json();
+        const devices = endpointsData.endpoints || endpointsData.items || endpointsData;
 
-        populateDeviceDropdown(data.endpoints || data.items || data);
+        // Construct room lookup map if room query succeeded
+        let roomMap = {};
+        if (roomsRes.status === 'fulfilled' && roomsRes.value.ok) {
+          const roomsData = await roomsRes.value.json();
+          const rooms = roomsData.rooms || roomsData.items || roomsData;
+          if (Array.isArray(rooms)) {
+            rooms.forEach(room => {
+              const rName = room.name || room.room_name || room.display_name;
+              if (room.id) roomMap[room.id] = rName;
+              if (room.room_id) roomMap[room.room_id] = rName;
+              if (Array.isArray(room.endpoint_ids)) {
+                room.endpoint_ids.forEach(epId => roomMap[epId] = rName);
+              }
+              if (Array.isArray(room.endpoints)) {
+                room.endpoints.forEach(ep => {
+                  const epId = typeof ep === 'object' ? (ep.id || ep.endpoint_id) : ep;
+                  if (epId) roomMap[epId] = rName;
+                });
+              }
+            });
+          }
+        }
+
+        log('Devices & Rooms retrieved successfully.', devices);
+        populateDeviceDropdown(devices, roomMap);
         setConnectedStatus(true);
       } catch (err) {
-        log(`Connection failed: ${err.message}\nTip: Ensure "Bypass Browser CORS" is checked if running directly from GitHub Pages or a browser.`);
+        log(`Connection failed: ${err.message}`);
         setConnectedStatus(false);
       }
     });
@@ -222,46 +383,50 @@
       }
     }
 
-    function populateDeviceDropdown(devices) {
-  const select = document.getElementById('deviceSelect');
-  select.innerHTML = '';
-  select.disabled = false;
+    function populateDeviceDropdown(devices, roomMap = {}) {
+      const select = document.getElementById('deviceSelect');
+      select.innerHTML = '';
+      select.disabled = false;
 
-  if (!Array.isArray(devices) || devices.length === 0) {
-    select.innerHTML = '<option value="">No devices found</option>';
-    return;
-  }
+      if (!Array.isArray(devices) || devices.length === 0) {
+        select.innerHTML = '<option value="">No devices found</option>';
+        return;
+      }
 
-  // Log the first device object in console so you can inspect exact field names
-  if (devices[0]) {
-    log('Sample Endpoint JSON structure:', devices[0]);
-  }
+      // Print first raw device payload to console for verification
+      if (devices[0]) {
+        log('Sample Raw Device JSON:', devices[0]);
+      }
 
-  devices.forEach(dev => {
-    // 1. Resolve Room Name across Neat Pulse API payload variations
-    const roomName = 
-      dev.room_name || 
-      (typeof dev.room === 'object' && dev.room !== null ? dev.room.name : dev.room) ||
-      dev.space_name ||
-      (typeof dev.space === 'object' && dev.space !== null ? dev.space.name : dev.space) ||
-      dev.location_name ||
-      dev.location ||
-      dev.display_name ||
-      dev.name || 
-      'Unnamed Room';
+      devices.forEach(dev => {
+        const devId = dev.id || dev.endpoint_id;
 
-    // 2. Resolve Model string (e.g., NF21D1, Neat Frame, Neat Bar)
-    const model = dev.model || dev.type || '';
-    
-    // 3. Format the display string (e.g. "Conference Room 101 — NF21D1")
-    const displayText = (model && roomName !== model)
-      ? `${roomName} (${model})`
-      : roomName;
+        // Extract direct embedded room names
+        let roomName = 
+          dev.room_name || 
+          dev.roomName ||
+          (typeof dev.room === 'object' && dev.room !== null ? dev.room.name : (typeof dev.room === 'string' ? dev.room : null)) ||
+          (typeof dev.space === 'object' && dev.space !== null ? dev.space.name : dev.space_name) ||
+          dev.location_name ||
+          dev.display_name;
 
-    const option = document.createElement('option');
-    option.value = dev.id || dev.endpoint_id;
-    option.textContent = displayText;
-    select.appendChild(option);
+        // Fall back to room lookup map via device ID or room ID
+        if (!roomName && roomMap) {
+          roomName = roomMap[devId] || (dev.room_id ? roomMap[dev.room_id] : null);
+        }
+
+        const model = dev.model || dev.type || 'Neat Device';
+        const fallbackName = dev.name && dev.name !== model ? dev.name : 'Unassigned Room';
+        const finalRoomName = roomName || fallbackName;
+
+        const displayText = (finalRoomName !== model) 
+          ? `${finalRoomName} (${model})`
+          : `${finalRoomName} - ${devId.substring(0, 8)}`;
+
+        const option = document.createElement('option');
+        option.value = devId;
+        option.textContent = displayText;
+        select.appendChild(option);
       });
     }
 
@@ -275,7 +440,7 @@
     async function applyFramingMode() {
       const deviceId = document.getElementById('deviceSelect').value;
       if (!deviceId) return alert('Please select a target device.');
-      if (!selectedFramingMode) return alert('Please select a framing mode.');
+      if (!selectedFramingMode) return alert('Please choose a framing mode.');
 
       const baseUrl = localStorage.getItem('neat_baseUrl').replace(/\/$/, '');
       const orgId = localStorage.getItem('neat_orgId');
@@ -292,7 +457,7 @@
         }
       };
 
-      log(`Sending update request...`, payload);
+      log(`Updating framing mode for endpoint ${deviceId}...`, payload);
 
       try {
         const response = await fetch(finalUrl, {
@@ -308,7 +473,7 @@
 
         const result = await response.json();
         log('Successfully applied framing mode!', result);
-        alert(`Framing mode standard changed to "${selectedFramingMode}".`);
+        alert(`Framing mode updated to "${selectedFramingMode}".`);
       } catch (err) {
         log(`Error applying framing mode: ${err.message}`);
       }
